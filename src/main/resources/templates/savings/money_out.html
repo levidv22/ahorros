@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>Listado de Ahorros</title>
+        <title>Gastos</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://kit.fontawesome.com/d8e40fe595.js" crossorigin="anonymous"></script>
@@ -24,37 +24,43 @@
             </div>
         </nav>
         <div class="container mt-5">
-            <h1>Listado de Ahorros</h1>
+            <h1>Registro de Gastos</h1>
             <div class="row mt-4">
                 <div class="col-md-8">
-                    <form th:action="@{/savings}" method="get" class="mb-3">
-                        <select name="personId" class="form-select" onchange="this.form.submit()">
-                            <option value="">-- Seleccione una persona --</option>
-                            <option th:each="person : ${persons}" th:value="${person.id}" th:text="${person.nombre}" 
-                                    th:selected="${person.id == selectedPersonId}"></option>
-                        </select>
+                    <!-- Mostrar mensaje de error si el monto supera los ahorros -->
+                    <div th:if="${errorMessage}" class="alert alert-danger">
+                        <p th:text="${errorMessage}"></p>
+                    </div>
+                    <form th:action="@{/money-out}" method="post">
+                        <div class="mb-4">
+                            <label for="amount" class="form-label">Monto del Gasto</label>
+                            <input type="number" id="amount" name="amount" class="form-control" step="0.01" required>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-danger px-4"><i class="fa-solid fa-check"></i> Registrar Gasto</button>
+                        </div>
                     </form>
-                    <table class="table table-striped">
+                    <hr>
+                    <h3>Gastos Realizados</h3>
+                    <table class="table">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Persona</th>
                                 <th>Monto</th>
-                                <th>Fecha y Hora</th>
+                                <th>Fecha</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="saving : ${savings}">
-                                <td th:text="${saving.id}"></td>
-                                <td th:text="${saving.person.nombre}"></td>
-                                <td th:text="${saving.amount} + ' Soles'"></td>
-                                <td th:text="${saving.formattedFecha}"></td>
+                            <tr th:each="expense : ${moneyOuts}">
+                                <td th:text="${expense.id}"></td>
+                                <td th:text="${expense.amount} + ' Soles'"></td>
+                                <td th:text="${expense.formattedFecha}">Fecha</td>
                                 <td>
-                                    <a th:href="@{'/savings/edit/' + ${saving.id}}" class="btn btn-warning btn-sm"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
-                                    <a th:href="@{'/savings/delete/' + ${saving.id}}" 
+                                    <a th:href="@{'/money-out/edit/' + ${expense.id}}" class="btn btn-warning btn-sm"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
+                                    <a th:href="@{'/money-out/delete/' + ${expense.id}}" 
                                        class="btn btn-danger btn-sm" 
-                                       onclick="return confirm('¿Estás seguro de que deseas eliminar este ahorro?');">
+                                       onclick="return confirm('¿Estás seguro de que deseas eliminar este gasto?');">
                                         <i class="fa-regular fa-trash-can"></i> Eliminar
                                     </a>
                                 </td>
@@ -63,16 +69,15 @@
                     </table>
                 </div>
                 <div class="col-md-4">
-                    <div class="card">
+                    <div class="card mb-4">
                         <div class="card-body">
-                            <h5>Total Ahorros:</h5>
-                            <p class="fw-bold fs-4 text-primary" th:text="${totalAmount + ' Soles'}">0.00 Soles</p>
+                            <h5>Ahorros:</h5>
+                            <p class="fw-bold text-primary fs-4" th:text="${totalSavings} + ' Soles'">0.00 Soles</p>
+                            <h5>Gastos:</h5>
+                            <p class="fw-bold text-danger fs-4" th:text="${totalExpenses} + ' Soles'">0.00 Soles</p>
+                            <h5>Monto Total:</h5>
+                            <p class="fw-bold text-success fs-4" th:text="${remainingSavings} + ' Soles'">0.00 Soles</p>
                         </div>
-                    </div>
-                    <br>
-                    <div>
-                        <a th:href="@{/savings/new}" class="btn btn-info btn-sm"><i class="fa-solid fa-right-to-bracket"></i> Agregar Nuevo Ahorro</a>
-                        <a th:href="@{/money-out}" class="btn btn-dark btn-sm ms-3"><i class="fa-solid fa-right-to-bracket"></i> Hacer Gastos</a>
                     </div>
                 </div>
             </div>

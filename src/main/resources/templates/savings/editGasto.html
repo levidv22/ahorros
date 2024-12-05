@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>Nuevo Ahorro</title>
+        <title>Editar Ahorro</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://kit.fontawesome.com/d8e40fe595.js" crossorigin="anonymous"></script>
@@ -24,21 +24,16 @@
             </div>
         </nav>
         <div class="container mt-5">
-            <h1>Registrar Ahorro</h1>
-            <form th:action="@{/savings}" method="post">
-                <div class="mb-4">
-                    <label for="person" class="form-label">Persona</label>
-                    <select id="person" name="personId" class="form-select" required>
-                        <option th:each="person : ${persons}" th:value="${person.id}" th:text="${person.nombre}"></option>
-                    </select>
-                </div>
+            <h1>Editar Ahorro</h1>
+            <form th:action="@{/money-out/update}" th:object="${expense}" method="post">
+                <input type="hidden" th:field="*{id}">
                 <div class="mb-4">
                     <label for="amount" class="form-label">Monto</label>
-                    <input type="number" id="amount" name="amount" class="form-control" step="0.01" required>
+                    <input type="number" id="amount" class="form-control" th:field="*{amount}" step="0.01" required>
                 </div>
                 <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-success px-4"><i class="fa-solid fa-right-to-bracket"></i> Guardar</button>
-                    <a th:href="@{/savings}" class="btn btn-info px-4  ms-3"><i class="fa-solid fa-rotate-right"></i> volver</a>
+                    <button type="submit" class="btn btn-success px-4"><i class="fa-solid fa-right-to-bracket"></i> Guardar Cambios</button>
+                    <a th:href="@{/money-out}" class="btn btn-info px-4 ms-3"> <i class="fa-solid fa-rotate-right"></i> volver</a>
                 </div>
             </form>
         </div>
